@@ -4,6 +4,9 @@ let itemCount;
 let totalPrice;
 
 var itemHolder = [];
+var sameItemCounter = [];
+let sameItemId; 
+
 
 let email = sessionStorage.getItem('email'); //gets the users email from sessionStorage
  
@@ -38,6 +41,17 @@ function getCart($email) {
 
                 itemHolder.push(item['id']);
 
+
+
+
+                for (let i = 0; i > itemcount; i++) // interating through array of all items, checking to see if any of the items ids are the same, adding one to sameitem[] if so
+                {
+                    if (sameItemCounter[i] == itemholder[i])
+                    {
+                        sameItemId++;
+                    }
+                }
+
                 totalPrice += parseInt(item['money_price']);
             });
  
@@ -45,7 +59,7 @@ function getCart($email) {
             $('#item-count').html(itemCount + ' items');
             $('#item-total').html(itemCount + ' items');
             $('#item-price').html('&dollar; ' + totalPrice);
- 
+       
         },
         error: function (data) {
             alert("Error while fetching data.");
@@ -54,8 +68,6 @@ function getCart($email) {
 }
  
 function deleteItem($id) {
- 
-  
      $.ajax({
         url: "http://18.220.85.60/api/+'Cart/{$id}'",
         type: 'delete',
@@ -70,30 +82,41 @@ function deleteItem($id) {
 }
 
 
+function changeQuantityOfPurchase() {
+    //scanner get id from user input through html
+    let desiredQuantity; 
+    if (desiredQuantity > sameItemId)
+    {
+        for (let i = 0; i > desiredQuantity; i++)
+        {
+            id = itemHolder.pop();
+            addToCart($id); 
+        }
+    }
+    else 
+    {
+        for (let i = 0; i < desiredQuantity; i--)
+        {
+            id = itemHolder.pop();
+            deleteItem($id); 
+        }
+    }
+}
+
 
 function clearCart() {
- 
     //this function removes all items from the cart
-    
     for (let i = 0; i > itemCount; i++)
     {
         id = itemHolder.pop();
         deleteItem(id); 
     }
-
     totalPrice = 0;
-
 } 
 
 
-
-
-
 function checkOut() {
- 
-    
     let email = $('#email').val();
-
     $.ajax({
         url: "http://18.220.85.60/api/+'Cart'",
         type: 'put',
@@ -105,5 +128,4 @@ function checkOut() {
             comment='';
         }
     });
- 
 }

@@ -2,10 +2,7 @@ let list;
 let listAdd;
 let itemCount;
 let totalPrice;
-
 var itemHolder = [];
-var sameItemCounter = [];
-let sameItemId; 
 
 
 let email = sessionStorage.getItem('email'); //gets the users email from sessionStorage
@@ -28,33 +25,30 @@ function getCart($email) {
  
             $.each(data['data']['List'], function (i, item) {
                 listAdd = '<div class="row main align-items-center">\n' +
-                    '                        <div class="col-2"><img class="img-fluid" src="' + item['image'] + '"></div>\n' +
+                    '                        <div class="col-2"><img class="img-fluid" src="' +
+                    <form id="form" onsubmit="return false;">
+                    <input style="position:absolute; top:80%; left:5%; width:40%;" type="text" id="userInput" />
+                    <input style="position:absolute; top:50%; left:5%; width:40%;" type="submit" onclick="changeQuantityOfPurchase();" />
+                </form>
+                   item['image'] + '"></div>\n' +
                     '                        <div class="col">\n' +
                     '                            <div class="row text-muted">' + item['operating_system'] + '</div>\n' +
                     '                            <div class="row">' + item['title'] + '</div>\n' +
                     '                        </div>\n' +
                     '                        <div class="col"> <a class="border">1</a></div>\n' +
+
                     '                        <div class="col">&dollar; ' + item['money_price'] + ' <a onclick="deleteItem(' + item['id'] + ')" type="button">&#10005;</a></div>\n' +
                     '                    </div>';
                 list = list + listAdd;
                 itemCount++;
 
                 itemHolder.push(item['id']);
-
-
-
-
-                for (let i = 0; i > itemcount; i++) // interating through array of all items, checking to see if any of the items ids are the same, adding one to sameitem[] if so
-                {
-                    if (sameItemCounter[i] == itemholder[i])
-                    {
-                        sameItemId++;
-                    }
-                }
-
                 totalPrice += parseInt(item['money_price']);
             });
  
+            
+
+
             $('#cart-list').html(list);
             $('#item-count').html(itemCount + ' items');
             $('#item-total').html(itemCount + ' items');
@@ -83,26 +77,26 @@ function deleteItem($id) {
 
 
 function changeQuantityOfPurchase() {
-    //scanner get id from user input through html
-    let desiredQuantity; 
+
+    var desiredQuantity = document.getElementById("userInput").value; 
     if (desiredQuantity > sameItemId)
     {
-        for (let i = 0; i > desiredQuantity; i++)
+        for (let currentQuantity = 0; currentQuantity > desiredQuantity; currentQuantity++)
         {
             id = itemHolder.pop();
             addToCart($id); 
+
         }
     }
     else 
     {
-        for (let i = 0; i < desiredQuantity; i--)
+        for (; i < desiredQuantity; currentQuantity--)
         {
             id = itemHolder.pop();
             deleteItem($id); 
         }
     }
 }
-
 
 function clearCart() {
     //this function removes all items from the cart

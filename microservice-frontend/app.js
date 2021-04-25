@@ -1,6 +1,5 @@
-app.js
 const Url = "http://18.220.85.60/api/"; //this constant holds the base url for the Microservice API, you will append the API route to this value
- 
+
 function fetchProductList() {
  
     jsonObj = [];
@@ -12,7 +11,7 @@ function fetchProductList() {
     !($.trim($('#operating_system').val()) == '') ? item ["operating_system"] = $('#operating_system').val(): '';
     !($.trim($('#min_price').val()) == '') ? item ["price_from"] = $('#min_price').val(): '';
     !($.trim($('#max_price').val()) == '') ? item ["price_to"] = $('#max_price').val(): '';
- 
+
     jsonObj.push(item);
  
     //jQuery Ajax request
@@ -46,7 +45,7 @@ function fetchProductList() {
                     '                    <button class="btn btn-info float-right btn-sm" onclick="fetchOneProduct('+item['id']+')">Detail</button>\n' +
                     '                </div>\n' +
                     '                <div class="card-footer">\n' +
-                    '                    <button class="btn btn-info float-right btn-sm" onclick="addToCart('+item['id']+')">Add to Cart</button>\n' +
+                    '                    <div class="form-group"> <label for="Quantity">Quantity</label> <select class="form-control" id="quantity"> <option>1</option> <option>2</option> <option>3</option> <option>4</option> <option>5</option> </select> <button class="btn btn-info float-right btn-sm" onclick="addToCart('+item['id']+')">Add to Cart</button>' 
                     '                </div>\n' +
                     '            </div>\n' +
                     '        </div>';
@@ -166,7 +165,6 @@ function fetchComments($id) {
 function setComment($id) {
  
     //TODO complete implementation using the product id
-
     let comment = $('message-text').val();
     let score = $('#score').val();
 
@@ -181,60 +179,42 @@ function setComment($id) {
                 comment='';
             }
         });
- 
-
-         
- 
- 
-    //HINT
-    //Take note of how the Ajax call in app.js/fetchComments() posts a GET request to corresponding API endpoint.
-    //Look at the Microservice API Documentation and find out the appripriate type of request for this action.
- 
     }
- 
-function addToCart($id) {
- 
-    //TODO complete implementation using the product id
 
+
+
+function addToCart($id) {
+
+    let quantity = document.getElementById("quantity").value;
     let email = $('#email').val();
 
-    $.ajax({
+    if( email !='' ) 
+    {
+        sessionStorage.setItem('email', email); //setItem 'email' in sessionStorage to be the user's email. You can access sessionStorage by sessionStorage.getItem().
+
+        for (let i = 0; i < quantity; i++)
+        {
+    
+            $.ajax({
         url: Url+'AddToCart',
         type: 'post',
         dataType: 'json',
-        data: {"product_id":$id, "email":$email}, //the json is defined here using javascript's dictionary syntax.
+        data: JSON.stringify({"product_id":$id, "email":email}), //the json is defined here using javascript's dictionary syntax.
         contentType: 'text/plain',
-        success: function (data) { //on success
+        success: function (data) 
+        { //on success
             //reactive HTML that depends on the contents od the returned data
             comment='';
         }
-    });
- 
- 
+                  });
+        } 
+    }  else 
+       {
+       alert("Please enter your email at top of page."); //alert user since email is empty
+       }
 }
 
 
-/*
-function changeQuantityPurchase($id) {
- 
-    //TODO complete implementation using the product id
-
-
-    
-    let desiredQuantity; 
-
-    for (let i = 0; i > desiredQuantity; i++)
-    {
-        addToCart(id); 
-    }
-
-   
- 
- 
-}
-*/
-
- 
 function toShoppingCart(){
     let email =$.trim($('#email').val()); //gets the user's email
  

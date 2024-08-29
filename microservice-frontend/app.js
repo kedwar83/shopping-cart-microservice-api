@@ -27,7 +27,6 @@ function fetchProductList() {
  
             $.each(data['data']['List'], function(i, item) {
  
-                //this is HTML code that is reactively added to the page, your TODO solutions do not need this.
                 productListAdd = '<div class="col-sm-6 col-md-4 col-lg-3 mt-4" id="product'+item['id']+'">\n' +
                     '            <div class="card card-inverse card-info">\n' +
                     '                <img class="card-img-top" src="'+item['image']+'">\n' +
@@ -164,7 +163,6 @@ function fetchComments($id) {
  
 function setComment($id) {
  
-    //TODO complete implementation using the product id
     let comment = $('message-text').val();
     let score = $('#score').val();
 
